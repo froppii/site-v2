@@ -1,0 +1,127 @@
+---
+interface Props {
+    title?: string;
+    startTop?: number;
+    startLeft?: number;
+    width?: string;
+}
+
+const { title = "", startTop = 120, startLeft = 120, width = "420px" } = Astro.props;
+---
+<style>
+    .window {
+        position: absolute;
+        top: var(--top);
+        left: var(--left);
+        width: var(--width);
+        background: #0b0b0b;
+        border-radius: 14px;
+        border: 1px solid #1e1e1e;
+        box-shadow: 0 12px 34px rgba(0,0,0,0.6);
+        color: #fff;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        user-select: none;
+        overflow: hidden;
+    }
+
+    .titlebar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 12px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+        cursor: grab;
+    }
+
+    .title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        flex: 1;
+    }
+
+    .controls {
+        display: flex;
+        gap: 8px;
+    }
+
+    .ctrl {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #222;
+        border: 1px solid #111;
+    }
+
+    .content {
+        padding: 0px 12px 12px 12px;
+        background: radial-gradient(1200px 400px at 10% 10%, rgba(255,255,255,0.01), transparent);
+    }
+
+    .dragging .titlebar { cursor: grabbing; }
+</style>
+
+<div
+    class="window"
+    id="window-frame"
+    style={`--top:${startTop}px; --left:${startLeft}px; --width:${width}`}
+>
+    <div class="titlebar" id="window-titlebar">
+        <div class="title">{title}</div>
+        <div class="controls">
+        <div class="ctrl" aria-hidden></div>
+        <div class="ctrl" aria-hidden></div>
+        <div class="ctrl" aria-hidden></div>
+    </div>
+</div>
+
+    <div class="content">
+        <slot />
+    </div>
+</div>
+
+<script>
+    (function () {
+        const win = document.getElementById("window-frame");
+        const bar = document.getElementById("window-titlebar");
+
+        let dragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        bar.addEventListener("mousedown", (e) => {
+            dragging = true;
+            win.classList.add("dragging");
+            offsetX = e.clientX - win.offsetLeft;
+            offsetY = e.clientY - win.offsetTop;
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (!dragging) return;
+            win.style.left = (e.clientX - offsetX) + "px";
+            win.style.top = (e.clientY - offsetY) + "px";
+        });
+
+        document.addEventListener("mouseup", () => {
+            dragging = false;
+            win.classList.remove("dragging");
+        });
+
+        bar.addEventListener("touchstart", (e) => {
+            const t = e.touches[0];
+            dragging = true;
+            offsetX = t.clientX - win.offsetLeft;
+            offsetY = t.clientY - win.offsetTop;
+        }, { passive: true });
+
+        document.addEventListener("touchmove", (e) => {
+            if (!dragging) return;
+            const t = e.touches[0];
+            win.style.left = (t.clientX - offsetX) + "px";
+            win.style.top = (t.clientY - offsetY) + "px";
+        }, { passive: true });
+
+        document.addEventListener("touchend", () => {
+            dragging = false;
+        });
+    })();
+</script>

@@ -1,0 +1,298 @@
+---
+interface Props {
+    stops: string[];
+    current?: string | number;
+    accessibility?: number[];
+    options?: { centerOnCurrent?: boolean };
+}
+
+const { stops = [], current = 0, accessibility = [], options = { centerOnCurrent: true } } = Astro.props;
+let currentIndex = typeof current === "number" ? current : stops.indexOf(current);
+if (currentIndex < 0) currentIndex = 0;
+const total = Math.max(stops.length - 1, 1);
+const progressPercent = (currentIndex / total) * 100;
+---
+
+<style>
+    .panel {
+        background: #000;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #111;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .header {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        height: 38px;
+    }
+
+    .next-label {
+        font-size: 0.90rem;
+        color: #fff;
+        font-weight: 700;
+        transform: rotate(-45deg);
+        letter-spacing: .08em;
+    }
+
+    .current-stop-wrap {
+        position: relative;
+        height: 34px;
+        min-width: 180px;
+        overflow: hidden;
+    }
+
+    .current-stop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(0);
+        transition: transform 380ms cubic-bezier(.22,.9,.32,1);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        white-space: nowrap;
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: #ffffff;
+    }
+
+    .current-stop .tiny {
+        font-size: 0.82rem;
+        color: #bcdffd;
+        font-weight: 700;
+        opacity: 0.95;
+    }
+
+    .strip-wrap {
+        position: relative;
+        width: 100%;
+        height: 90px;
+    }
+
+    .strip {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 9px;
+        background: #1d4ed8;
+        border-radius: 3px;
+        z-index: 2;
+    }
+
+    .progress {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 6px;
+        border-radius: 3px;
+        background: #1d4ed8; 
+        width: var(--progress, 0%);
+        z-index: 3;
+        transition: width 520ms cubic-bezier(.22,.9,.32,1);
+    }
+
+    .dots {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 6px;
+        z-index: 4;
+        pointer-events: none;
+    }
+
+    .dot-wrapper {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .label {
+        position: absolute;
+        top: -26px;
+        transform: rotate(-45deg);
+        transform-origin: left center;
+        font-size: 1rem;
+        color: #d7d9dd;
+        white-space: nowrap;
+        pointer-events: auto;
+    }
+
+    .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 3px solid #1d4ed8;
+        background: #e6e6e6;
+        box-sizing: border-box;
+        transition: background 380ms;
+    }
+
+    .dot.past { background: #a8a8a8; }
+    .dot.current { background: #000000; border-color: #e6e6e6; }
+    .dot.future { background: #e6e6e6; }
+
+    .access {
+        margin-top: 6px;
+        width: 14px;
+        height: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.95;
+    }
+
+    .label.faint { opacity: 0.6; color: #9aa0a6; }
+
+    .interactive-dot {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        z-index: 6;
+        background: transparent;
+        border: none;
+    }
+
+    .interactive-dot:focus { outline: 2px solid rgba(29,78,216,0.3); border-radius: 6px; }
+
+</style>
+
+<div class="panel" role="region" aria-label="Strip map">
+    <div class="header">
+        <div class="next-label">NEXT STOP</div>
+        <div class="current-stop-wrap" id="currentStopWrap" aria-live="polite">
+        <div class="current-stop" id="currentStopInner" style="transform: translateX(0);">
+            <div class="tiny"></div>
+            <div id="currentStopText">{stops[currentIndex] ?? ""}</div>
+        </div>
+        </div>
+    </div>
+
+    <div class="strip-wrap" id="stripWrap">
+        <div class="strip" aria-hidden></div>
+        <div class="progress" id="progressBar" style={`--progress: ${progressPercent}%`}></div>
+
+        <div class="dots" id="dotsLayer" aria-hidden>
+            {stops.map((stop, i) => {
+                const idx = i;
+                const leftPercent = (idx / total) * 100;
+                const state = i < currentIndex ? "past" : i === currentIndex ? "current" : "future";
+
+                return (
+                    <Fragment>
+                        <div
+                        class="dot-wrapper"
+                        style={`left: ${leftPercent}%;`}
+                        >
+                            <div class={`label ${i < currentIndex - 3 ? "faint" : ""}`}>{stop}</div>
+                            <div class={`dot ${state}`}></div>
+                            {accessibility.includes(i) && (
+                                <div class="access" aria-hidden>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                                        <path d="M12 2a5 5 0 00-5 5v2a3 3 0 003 3h4a3 3 0 003-3V7a5 5 0 00-5-5zM7 17a5 5 0 1010 0v-1H7v1z" fill="#fff"/>
+                                    </svg>
+                                </div>
+                            )}
+                        </div>
+
+                        <button
+                            class="interactive-dot"
+                            style={`left:${leftPercent}%`}
+                            aria-label={`Go to ${stop}`}
+                            data-index={i}
+                        ></button>
+                    </Fragment>
+                );
+            })}
+        </div>
+    </div>
+</div>
+
+<script>
+    declare global {
+        interface Window {
+            setStripCurrent: (index: number) => void;
+        }
+    }
+
+    (function () {
+        const stops = JSON.parse(decodeURIComponent("{ encodeURIComponent(JSON.stringify(stops)) }")) as string[];
+        const total = Math.max(stops.length - 1, 1);
+        let currentIndexState = Number("{ currentIndex }");
+        const dotsLayer = document.getElementById("dotsLayer");
+        const progressBar = document.getElementById("progressBar");
+        const currentStopText = document.getElementById("currentStopText");
+        const currentStopInner = document.getElementById("currentStopInner");
+        const stripWrap = document.getElementById("stripWrap");
+
+        if (!dotsLayer || !progressBar || !currentStopText || !currentStopInner || !stripWrap) {
+            console.error("Required DOM elements not found");
+            return;
+        }
+
+        function centerOn(index: number, animate = true): void {
+            const wrapWidth = stripWrap.clientWidth;
+            const leftPercent = (index / total) * 100;
+            const dotX = (leftPercent / 100) * wrapWidth;
+            const targetX = wrapWidth / 2 - dotX;
+            if (animate) {
+                dotsLayer.style.transition = 'transform 560ms cubic-bezier(.22,.9,.32,1)';
+                progressBar.style.transition = 'width 520ms cubic-bezier(.22,.9,.32,1)';
+                currentStopInner.style.transition = 'transform 380ms cubic-bezier(.22,.9,.32,1)';
+            } else {
+                dotsLayer.style.transition = 'none';
+                progressBar.style.transition = 'none';
+                currentStopInner.style.transition = 'none';
+            }
+            dotsLayer.style.transform = `translateX(${targetX}px)`;
+            progressBar.style.width = `${(index / total) * 100}%`;
+            currentIndexState = index;
+            currentStopText.textContent = stops[index] ?? "";
+            currentStopInner.style.transform = 'translateX(-8px)';
+            requestAnimationFrame(() => {
+                currentStopInner.style.transform = 'translateX(0)';
+            });
+        }
+
+        centerOn(currentIndexState, false);
+
+        dotsLayer.querySelectorAll('.interactive-dot').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = Number((btn as HTMLButtonElement).dataset.index);
+                window.setStripCurrent(idx);
+            });
+            btn.addEventListener('keydown', (e: Event) => {
+                const keyEvent = e as KeyboardEvent;
+                if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+                    keyEvent.preventDefault();
+                    window.setStripCurrent(Number((btn as HTMLButtonElement).dataset.index));
+                }
+            });
+        });
+
+        window.setStripCurrent = function (index: number): void {
+            if (typeof index !== 'number') return;
+            index = Math.max(0, Math.min(index, stops.length - 1));
+            centerOn(index, true);
+        };
+
+        window.addEventListener('resize', () => {
+            centerOn(currentIndexState, false);
+        });
+    })();
+</script>
