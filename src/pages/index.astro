@@ -13,19 +13,15 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
-		<Window title="next stop">
-			<StopIndicator
+		<StopIndicator
   			stops={["/", "/about", "/projects", "/blog", "/contact"]}
+			links={["/", "/about", "/projects", "/blog/index", "/contact"]}
   			current={Astro.url.pathname}
-			/>
-		</Window>
+		/>
 		<main>
 			<h1>froppii</h1>
 			<p>
-				astro i love astro sm
-			</p>
-			<p>
-				:3
+				hi im darlene! i mainly go as froppii but you might also know me as frosty and many more! im a 17 y/o from indonesia. in my spare time, you can find me making games, coding sites, doing art, and jamming to music.
 			</p>
 		</main>
 		<Footer />

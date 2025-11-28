@@ -1,12 +1,13 @@
 ---
 interface Props {
     stops: string[];
+    links?: string[];
     current?: string | number;
     accessibility?: number[];
     options?: { centerOnCurrent?: boolean };
 }
 
-const { stops = [], current = 0, accessibility = [], options = { centerOnCurrent: true } } = Astro.props;
+const { stops = [], links = [], current = 0, accessibility = [], options = { centerOnCurrent: true } } = Astro.props;
 let currentIndex = typeof current === "number" ? current : stops.indexOf(current);
 if (currentIndex < 0) currentIndex = 0;
 const total = Math.max(stops.length - 1, 1);
@@ -14,22 +15,46 @@ const progressPercent = (currentIndex / total) * 100;
 ---
 
 <style>
-    .panel {
-        background: #000;
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid #111;
+    .topbar-row {
         width: 100%;
-        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 16px;
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+    
+    .sidebar-box {
+        width: 160px;
+        height: min(100px, 20vh);
+        background: #000;
+    }
+
+    .topbar {
+        position: sticky;
+        top: 18px;
+        margin: 0 auto;
+        width: min(860px, 50%);
+        height: min(100px, 17vh);
+        z-index: 999;
+        background: #000;
+        padding: 14px;
+        padding-top: 0;
+        padding-left: 25px;
+        padding-right: 80px;
+        border: 3px solid #111;
+        border-radius: 3px;
     }
 
     .header {
         display: flex;
         align-items: baseline;
         gap: 8px;
+        transform: rotat(-45deg);
         margin-bottom: 10px;
-        overflow: hidden;
-        height: 38px;
+        overflow: visible;
+        height: auto;
     }
 
     .next-label {
@@ -37,14 +62,16 @@ const progressPercent = (currentIndex / total) * 100;
         color: #fff;
         font-weight: 700;
         transform: rotate(-45deg);
-        letter-spacing: .08em;
+        position: relative;
+        top: 25px;
+        left: -20px;
     }
 
     .current-stop-wrap {
         position: relative;
         height: 34px;
         min-width: 180px;
-        overflow: hidden;
+        overflow: visible;
     }
 
     .current-stop {
@@ -52,7 +79,6 @@ const progressPercent = (currentIndex / total) * 100;
         top: 0;
         left: 0;
         transform: translateY(0);
-        transition: transform 380ms cubic-bezier(.22,.9,.32,1);
         display: flex;
         gap: 10px;
         align-items: center;
@@ -108,7 +134,7 @@ const progressPercent = (currentIndex / total) * 100;
         width: 100%;
         height: 6px;
         z-index: 4;
-        pointer-events: none;
+        pointer-events: auto;
     }
 
     .dot-wrapper {
@@ -118,17 +144,24 @@ const progressPercent = (currentIndex / total) * 100;
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-decoration: none;
     }
 
     .label {
         position: absolute;
-        top: -26px;
+        top: -20px;
+        left: 25px;
         transform: rotate(-45deg);
         transform-origin: left center;
         font-size: 1rem;
         color: #d7d9dd;
         white-space: nowrap;
         pointer-events: auto;
+        z-index: 12;
+    }
+
+    .dot-wrapper:hover .label {
+        text-decoration: underline;
     }
 
     .dot {
@@ -145,80 +178,66 @@ const progressPercent = (currentIndex / total) * 100;
     .dot.current { background: #000000; border-color: #e6e6e6; }
     .dot.future { background: #e6e6e6; }
 
-    .access {
-        margin-top: 6px;
-        width: 14px;
-        height: 14px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0.95;
-    }
-
     .label.faint { opacity: 0.6; color: #9aa0a6; }
 
-    .interactive-dot {
+    .diag-line {
         position: absolute;
+        width: 120px;
+        height: 16.5px;
+        background: #1d4ed8;
         top: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
-        z-index: 6;
-        background: transparent;
-        border: none;
+        left: 0%;
+        transform: translate(-24px, -46px) rotate(-45deg);
+        border-radius: 15px;
+        border: 1px solid #111;
+        z-index: 3; 
     }
 
-    .interactive-dot:focus { outline: 2px solid rgba(29,78,216,0.3); border-radius: 6px; }
 
 </style>
 
-<div class="panel" role="region" aria-label="Strip map">
-    <div class="header">
-        <div class="next-label">NEXT STOP</div>
-        <div class="current-stop-wrap" id="currentStopWrap" aria-live="polite">
-        <div class="current-stop" id="currentStopInner" style="transform: translateX(0);">
-            <div class="tiny"></div>
-            <div id="currentStopText">{stops[currentIndex] ?? ""}</div>
+<div class="topbar-row">
+    <div class="sidebar-box"></div>
+    <div class="topbar" role="region" aria-label="Strip map">
+        <div class="header">
+            <div class="next-label">NEXT STOP</div>
+            <div class="current-stop-wrap" id="currentStopWrap" aria-live="polite">
+            </div>
         </div>
-        </div>
-    </div>
 
-    <div class="strip-wrap" id="stripWrap">
-        <div class="strip" aria-hidden></div>
-        <div class="progress" id="progressBar" style={`--progress: ${progressPercent}%`}></div>
+        <div class="strip-wrap" id="stripWrap">
+            <div class="strip" aria-hidden></div>
+            <div class="diag-line"></div>
+            <div class="progress" id="progressBar" style={`--progress: ${progressPercent}%`}></div>
 
-        <div class="dots" id="dotsLayer" aria-hidden>
-            {stops.map((stop, i) => {
-                const idx = i;
-                const leftPercent = (idx / total) * 100;
-                const state = i < currentIndex ? "past" : i === currentIndex ? "current" : "future";
+            <div class="dots" id="dotsLayer" aria-hidden>
+                {stops.map((stop, i) => {
+                    const idx = i;
+                    const leftPercent = (idx / total) * 100;
+                    const state = i < currentIndex ? "past" : i === currentIndex ? "current" : "future";
 
-                return (
-                    <Fragment>
-                        <div
-                        class="dot-wrapper"
-                        style={`left: ${leftPercent}%;`}
-                        >
-                            <div class={`label ${i < currentIndex - 3 ? "faint" : ""}`}>{stop}</div>
-                            <div class={`dot ${state}`}></div>
-                            {accessibility.includes(i) && (
-                                <div class="access" aria-hidden>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                                        <path d="M12 2a5 5 0 00-5 5v2a3 3 0 003 3h4a3 3 0 003-3V7a5 5 0 00-5-5zM7 17a5 5 0 1010 0v-1H7v1z" fill="#fff"/>
-                                    </svg>
-                                </div>
-                            )}
-                        </div>
+                    return (
+                        <Fragment>
+                            <div
+                            class="dot-wrapper"
+                            style={`left: ${leftPercent}%;`}
+                            >
+                                <a
+                                    href={links[i] ?? stop}
+                                    class="dot-wrapper"
+                                    style={`left: ${leftPercent}%;`}
+                                >
+                                    <div class={`label ${i < currentIndex - 3 ? "faint" : ""}`}>
+                                        {stop}
+                                    </div>
 
-                        <button
-                            class="interactive-dot"
-                            style={`left:${leftPercent}%`}
-                            aria-label={`Go to ${stop}`}
-                            data-index={i}
-                        ></button>
-                    </Fragment>
-                );
-            })}
+                                    <div class={`dot ${state}`}></div>
+                                </a>
+                            </div>
+                        </Fragment>
+                    );
+                })}
+            </div>
         </div>
     </div>
 </div>
@@ -231,7 +250,8 @@ const progressPercent = (currentIndex / total) * 100;
     }
 
     (function () {
-        const stops = JSON.parse(decodeURIComponent("{ encodeURIComponent(JSON.stringify(stops)) }")) as string[];
+        const stops = JSON.parse(`{JSON.stringify(stops)}`);
+        const links = JSON.parse(`{JSON.stringify(links)}`);
         const total = Math.max(stops.length - 1, 1);
         let currentIndexState = Number("{ currentIndex }");
         const dotsLayer = document.getElementById("dotsLayer");
@@ -270,20 +290,6 @@ const progressPercent = (currentIndex / total) * 100;
         }
 
         centerOn(currentIndexState, false);
-
-        dotsLayer.querySelectorAll('.interactive-dot').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = Number((btn as HTMLButtonElement).dataset.index);
-                window.setStripCurrent(idx);
-            });
-            btn.addEventListener('keydown', (e: Event) => {
-                const keyEvent = e as KeyboardEvent;
-                if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
-                    keyEvent.preventDefault();
-                    window.setStripCurrent(Number((btn as HTMLButtonElement).dataset.index));
-                }
-            });
-        });
 
         window.setStripCurrent = function (index: number): void {
             if (typeof index !== 'number') return;
