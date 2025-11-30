@@ -4,8 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-
+import StopIndicator from '../components/StopIndicator.astro';
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
@@ -56,7 +55,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	</head>
 
 	<body>
-		<Header />
+		<StopIndicator
+  			stops={["/", "/about", "/projects", "/blog", "/contact"]}
+			links={["/", "/about", "/projects", "/blog", "/contact"]}
+  			current={Astro.url.pathname}
+		/>
 		<main>
 			<article>
 				<div class="hero-image">

@@ -3,7 +3,6 @@ const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} broppii.
 	<div class="social-links">
 		<a href="https://m.webtoo.ls/@astro" target="_blank">
 			<span class="sr-only">Follow Astro on Mastodon</span>
@@ -38,11 +37,12 @@ const today = new Date();
 			>
 		</a>
 	</div>
+	&copy; {today.getFullYear()} broppii.
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		padding: 1em;
+		background: #0e176c;
 		color: rgb(var(--gray));
 		text-align: center;
 	}
