@@ -167,3 +167,9 @@ hr {
 	height: auto;
 	display: block;
 }
+
+@media (max-width: 700px) {
+	.header-row {
+		grid-template-columns: 1fr;
+	}
+}

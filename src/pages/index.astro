@@ -1,49 +1,32 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
 import StopIndicator from '../components/StopIndicator.astro';
-import Window from '../components/Window.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import HeaderRow from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
+<Layout title="home">
+	<HeaderRow slot="header">
+		<div slot="left">
+			<strong>froppii.dev</strong>
+		</div>
+
 		<StopIndicator
+			slot="center"
   			stops={["/", "/about", "/projects", "/blog", "/contact"]}
 			links={["/", "/about", "/projects", "/blog", "/contact"]}
-  			current={Astro.url.pathname}
+			current={Astro.url.pathname}
 		/>
-		<Window title="map.png" startTop={150} startLeft={29} width="230px">
-		    <div class="map-container">
-        		<img src="/map.png" usemap="#stations" class="map" />
-    		</div>
 
-			<map name="stations">
-				<area shape="circle" coords="60,45,20" href="/" alt="home" />
-				<area shape="circle" coords="60,110,20" href="/about" alt="about" />
-				<area shape="circle" coords="60,180,20" href="/projects" alt="projects" />
-				<area shape="circle" coords="105,250,20" href="/board" alt="board" />
-				<area shape="circle" coords="105,280,20" href="/blog" alt="blog" />
-				<area shape="circle" coords="105,360,20" href="/contact" alt="contact" />
-				<area shape="circle" coords="145,195,20" href="/friends" alt="friends" />
-				<area shape="circle" coords="30,250,20" href="/buttons" alt="buttons" />
-				<area shape="circle" coords="10,315,20" href="/photos" alt="photos" />
-			</map>
-		</Window>
-		<main class="note">
-			<h1>froppii.dev</h1>
-			<p>
-				hi im darlene, a 17 y/o from indonesia! i mainly go as froppii but you might also know me as frosty and many more! in my spare time, you can find me making games, coding sites, doing art, and jamming to music!
-			</p>
-			<p>
-				p.s. you should check out the <a href="/board">board</a>!
-		</main>
-		<Footer />
-	</body>
-</html>
+		<div slot="right">
+			<span>v1.0</span>
+		</div>
+	</HeaderRow>
+	<h1>froppii.dev</h1>
+	<p>
+		hi im darlene, a 17 y/o from indonesia! i mainly go as froppii but you might also know me as frosty and many more! in my spare time, you can find me making games, coding sites, doing art, and jamming to music!
+	</p>
+	<p>
+		p.s. you should check out the <a href="/board">board</a>!
+	</p>
+</Layout>
 
