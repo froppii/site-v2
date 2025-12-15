@@ -1,13 +1,28 @@
 ---
 import StopIndicator from '../components/StopIndicator.astro';
+import StopSign from '../components/StopSign.astro';
 import HeaderRow from '../components/Header.astro';
 import Layout from '../layouts/Layout.astro';
+
+const stops = [
+	{ path: "/", title: "1st Avenue Station", logo: "/logos/home.svg" },
+	{ path: "/about", title: "Local 2 St Station", logo: "/logos/about.svg" },
+	{ path: "/projects", title: "Works Boulevard Station", logo: "/logos/projects.svg" },
+	{ path: "/blog", title: "Journal Road Station", logo: "/logos/blog.svg" },
+	{ path: "/contact", title: "Exchange Avenue", logo: "/logos/contact.svg" }
+];
+
+const currentPath = Astro.url.pathname;
+const currentStop = stops.find(s => s.path === currentPath) ?? stops[0];
 ---
 
 <Layout title="home">
 	<HeaderRow slot="header">
 		<div slot="left">
-			<strong>froppii.dev</strong>
+			<StopSign 
+				title={currentStop.title}
+				logo={currentStop.logo}
+			/>
 		</div>
 
 		<StopIndicator
@@ -21,12 +36,10 @@ import Layout from '../layouts/Layout.astro';
 			<span>v1.0</span>
 		</div>
 	</HeaderRow>
-	<h1>froppii.dev</h1>
+	<div class="title-header"><h1>froppii.dev</h1></div>
 	<p>
-		hi im darlene, a 17 y/o from indonesia! i mainly go as froppii but you might also know me as frosty and many more! in my spare time, you can find me making games, coding sites, doing art, and jamming to music!
+		hey there! im darlene, a 17 y/o from indonesia! welcome to my little space in the internet that is a hodgepodge of thoughts, works, and connections i care about. in my spare time, you can find me making games, coding sites, doing art, and jamming to music!
 	</p>
-	<p>
-		p.s. you should check out the <a href="/board">board</a>!
-	</p>
+
 </Layout>
 

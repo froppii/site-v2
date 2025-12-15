@@ -1,8 +1,41 @@
 ---
+import StopIndicator from '../components/StopIndicator.astro';
+import StopSign from '../components/StopSign.astro';
+import HeaderRow from '../components/Header.astro';
 import Layout from '../layouts/Layout.astro';
+
+const stops = [
+	{ path: "/", title: "1st Avenue Station", logo: "/logos/home.svg" },
+	{ path: "/about", title: "Local 2 St Station", logo: "/logos/about.svg" },
+	{ path: "/projects", title: "Works Boulevard Station", logo: "/logos/projects.svg" },
+	{ path: "/blog", title: "Journal Road Station", logo: "/logos/blog.svg" },
+	{ path: "/contact", title: "Exchange Avenue", logo: "/logos/contact.svg" }
+];
+
+const currentPath = Astro.url.pathname;
+const currentStop = stops.find(s => s.path === currentPath) ?? stops[0];
 ---
 
 <Layout title="about">
+	<HeaderRow slot="header">
+		<div slot="left">
+			<StopSign 
+				title={currentStop.title}
+				logo={currentStop.logo}
+			/>
+		</div>
+
+		<StopIndicator
+			slot="center"
+  			stops={["/", "/about", "/projects", "/blog", "/contact"]}
+			links={["/", "/about", "/projects", "/blog", "/contact"]}
+			current={Astro.url.pathname}
+		/>
+
+		<div slot="right">
+			<span>v1.0</span>
+		</div>
+	</HeaderRow>
 	<main>
 		<h1>about me</h1>
 		<p>

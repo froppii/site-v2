@@ -27,9 +27,8 @@ const total = Math.max(stops.length - 1, 1);
     .topbar {
         width: 100%;
         height: 100%;
-        min-height: 120px;
-        background: #000;
-        border: 3px solid #111;
+        min-height: 110px;
+        border: 3px solid #ff4507;
         box-sizing: border-box;
         padding: 0.5rem 0.75rem;
         display: flex;
@@ -46,10 +45,10 @@ const total = Math.max(stops.length - 1, 1);
     }
 
     .next-label {
-        font-size: calc(1rem * var(--scale));
+        font-size: calc(0.95rem * var(--scale));
         color: #1d4ed8;
         font-weight: 700;
-        transform: rotate(-45deg) translate(calc(-37px * var(--scale)), calc(38px * var(--scale)));
+        transform: rotate(-45deg) translate(calc(-36px * var(--scale)), calc(35px * var(--scale)));
         transform-origin: left center;
         white-space: nowrap;
     }
@@ -99,11 +98,12 @@ const total = Math.max(stops.length - 1, 1);
 
     .label {
         position: absolute;
-        top: calc(-1.25em * var(--scale));
-        left: calc(1.5em * var(--scale));
+        top: calc(-1.1em * var(--scale));
+        left: calc(1.7em * var(--scale));
         transform: rotate(-45deg);
         transform-origin: left center;
-        font-size: calc(0.95rem * var(--scale));
+        font-weight: 700;
+        font-size: calc(0.80rem * var(--scale));
         color: #d7d9dd;
         white-space: nowrap;
         max-width: 8em;
