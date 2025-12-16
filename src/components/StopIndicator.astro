@@ -5,7 +5,12 @@ interface Props {
     current?: string | number;
 }
 
-const { stops = [], links = [], current = 0 } = Astro.props;
+const rawStops = Astro.props.stops;
+const rawLinks = Astro.props.links;
+
+const stops = Array.isArray(rawStops) ? rawStops : [];
+const links = Array.isArray(rawLinks) ? rawLinks : [];
+const current = Astro.props.current ?? 0;
 let currentIndex = typeof current === "number" ? current : stops.indexOf(current);
 if (currentIndex < 0) currentIndex = 0;
 const total = Math.max(stops.length - 1, 1);
