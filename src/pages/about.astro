@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 
 const stops = [
 	{ path: "/", title: "1st Avenue Station", logo: "/logos/home.svg" },
-	{ path: "/about", title: "Local 2 St Station", logo: "/logos/about.svg" },
+	{ path: "/about", title: "Local 2 St Station", logo: "/logos/ftrain.svg" },
 	{ path: "/projects", title: "Works Boulevard Station", logo: "/logos/projects.svg" },
 	{ path: "/blog", title: "Journal Road Station", logo: "/logos/blog.svg" },
 	{ path: "/contact", title: "Exchange Avenue", logo: "/logos/contact.svg" }
@@ -36,36 +36,27 @@ const currentStop = stops.find(s => s.path === currentPath) ?? stops[0];
 			<span>v1.0</span>
 		</div>
 	</HeaderRow>
-	<main>
-		<h1>about me</h1>
-		<p>
-			salutations, i'm froppii! i'm a highschooler from indonesia! i spend most of my time coding random projects that comes into my mind, fun ones!
-		</p>
+	<div class="title-header"><h1>about me</h1></div>
+	<p>
+		salutations, i'm froppii! i'm a highschooler from indonesia! i spend most of my time coding random projects that comes into my mind, fun ones!
+	</p>
 
-		<p>
-			here are some things i like/about me(anything really)!:
-			<ul>
-				<li>i'm 17 years old</li>
-				<li>likes to walk. if walking is possible why take other methods of transport :3</li>
-				<li>fascinated by transit systems all over the world</li>
-				<li>i make games sometimes (using godot)</li>
-				<li>watching long documentaries</li>
-				<li>mountains( > beaches)</li>
-				<li>moss + rocks</li>
-				<li>all the different forms of art!</li>
-			</ul>
-		</p>
+	<p>
+		here are some things i like/about me(anything really)!:
+		<ul>
+			<li>i'm 17 years old</li>
+			<li>likes to walk. if walking is possible why take other methods of transport :3</li>
+			<li>fascinated by transit systems all over the world</li>
+			<li>i make games sometimes (using godot)</li>
+			<li>watching long documentaries</li>
+			<li>mountains( > beaches)</li>
+			<li>moss + rocks</li>
+			<li>all the different forms of art!</li>
+		</ul>
+	</p>
 
-		<p>
-			feel free to reach out to me via the <a href="/contact">contact</a> page if you wanna chat!
-		</p>
+	<p>
+		feel free to reach out to me via the <a href="/contact">contact</a> page if you wanna chat!
+	</p>
 
-		<p>
-			
-		</p>
-
-		<p>
-			
-		</p>
-	</main>
 </Layout>

@@ -1,22 +1,50 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import StopIndicator from '../components/StopIndicator.astro';
+import HeaderRow from '../components/Header.astro';
+import StopSign from '../components/StopSign.astro';
+
+const stops = [
+	{ path: "/", title: "1st Avenue Station", logo: "/logos/home.svg" },
+	{ path: "/about", title: "Local 2 St Station", logo: "/logos/about.svg" },
+	{ path: "/projects", title: "Works Boulevard Station", logo: "/logos/ftrain.svg" },
+	{ path: "/blog", title: "Journal Road Station", logo: "/logos/blog.svg" },
+	{ path: "/contact", title: "Exchange Avenue", logo: "/logos/contact.svg" }
+];
+
+const currentPath = Astro.url.pathname;
+const currentStop = stops.find(s => s.path === currentPath) ?? stops[0];
 ---
 
 <Layout title="projects">
-    <main>
-        <h1>projects</h1>
-        <p>
-            here are some of the projects i've worked on/am working on! all of them are open source so feel free to check out the code(the codes bad though) :)
-        </p>
+    <HeaderRow slot="header">
+		<div slot="left">
+			<StopSign 
+				title={currentStop.title}
+				logo={currentStop.logo}
+			/>
+		</div>
 
-        <h2>games</h2>
-        <ul>
-            <li><a href="https://github.com/froppii/shiba1">kei</a> - a game about driving and loading up a kei truck while driving in the countryside. (WIP)</li>
-        </ul>
+		<StopIndicator
+			slot="center"
+  			stops={["/", "/about", "/projects", "/blog", "/contact"]}
+			links={["/", "/about", "/projects", "/blog", "/contact"]}
+			current={Astro.url.pathname}
+		/>
+	</HeaderRow>
+    <div class="title-header"><h1>projects</h1></div>
+    <p>
+        here are some of the projects i've worked on/am working on! all of them are open source so feel free to check out the code(the codes bad though) :)
+    </p>
 
-        <h2>websites</h2>
-        <ul>
-            <li><a href="https://froppii.dev">froppii.dev</a> - my personal website (you're here!) built with astro.</li>
-            <li><a href="https://github.com/froppii/ascii-dungeon">dsciied</a> - a d20 roller in ascii which explodes magic whenever you roll it</li>
-        </ul>
-    </main>
+    <h2>games</h2>
+    <ul>
+        <li><a href="https://github.com/froppii/shiba1">kei</a> - a game about driving and loading up a kei truck while driving in the countryside. (WIP)</li>
+    </ul>
+
+    <h2>websites</h2>
+    <ul>
+        <li><a href="https://froppii.dev">froppii.dev</a> - my personal website (you're here!) built with astro.</li>
+        <li><a href="https://github.com/froppii/ascii-dungeon">dsciied</a> - a d20 roller in ascii which explodes magic whenever you roll it</li>
+    </ul>
+</Layout>

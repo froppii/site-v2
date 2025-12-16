@@ -2,18 +2,16 @@
 const { left, center, right } = Astro.props;
 ---
 
-<div class="header-row">
-	<div class="header-box">
-		<slot name="left" />
-	</div>
+<div class="intro flare-zone">
+	<div class="header-row">
+		<div class="header-box">
+			<slot name="left" />
+		</div>
 
-	<div class="header-box">
-		<slot name="center" />
+		<div class="header-box">
+			<slot name="center" />
+		</div>
 	</div>
-
-	<!--<div class="header-box">
-		<slot name="right" />
-	</div> -->
 </div>
 
 <style>
@@ -22,17 +20,21 @@ const { left, center, right } = Astro.props;
 		max-width: 720px;
         width: 100%;
 		margin: 0 auto;
+		overflow: visible;
 		box-sizing: border-box;
     }
+	
 
 	.header-row {
 		display: grid;
-		grid-template-columns: 26% 54% 20%;
+		grid-template-columns: 40% 60% ;
 		gap: 1rem;
-		height: 110px;
-		margin-bottom: 1px;
+		position: relative;
+		height: 100px;
+		margin-bottom: 1.7rem;
 		width: 100%;
 		margin-top: 1rem;
+		z-index: 1;
 		box-sizing: border-box;
 		align-items: stretch;
 	}

@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const { post, href } = Astro.props;
+---
+
+<a class="card-link" href={href ?? '#'} aria-hidden={!href}>
+  <div class="blog-post">
+    <div class="card-header">
+      <span class="card-date">
+        <FormattedDate date={post.data.pubDate} />
+      </span>
+    </div>
+
+    <div class="card-body">
+      {post.data.heroImage && (
+        <div class="image-wrapper">
+          <Image
+            src={post.data.heroImage}
+            alt={post.data.title}
+            loading="lazy"
+            width={700}
+            height={700}
+          />
+        </div>
+      )}
+
+      <div class="text-content">
+        <h4 class="title">{post.data.title}</h4>
+        <p class="description">{post.data.description}</p>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .card-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .blog-post {
+    width: 100%;
+    border: 2px solid #ddd;
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    height: 22px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    background: #ddd;
+    font-size: 12px;
+    color: #000;
+  }
+
+  .card-date {
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+  }
+
+  .card-body {
+    display: flex;
+    align-items: flex-start;
+    height: 118px;
+  }
+
+  .image-wrapper {
+    height: 118px;
+    width: 160px;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .text-content {
+    flex: 1;
+    padding: 1rem;
+  }
+
+  .title {
+    margin: 0 0 0.25rem 0;
+    font-size: 20px;
+    color: #ccc;
+  }
+
+  .description {
+    margin: 0 0 0.2rem 0;
+    font-size: 14px;
+    color: #ccc;
+  }
+
+  .date {
+    margin: 0;
+    font-size: 18px;
+    color: #888;
+  }
+</style>

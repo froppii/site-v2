@@ -46,10 +46,10 @@ body {
 	position: relative;
 	padding: 0;
 	text-align: left;
-	background: #171f69;
+	background: #070e1d;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: #e3e3e3;
+	color: #efefef;
 	font-size: 20px;
 	line-height: 1.7;
 }
@@ -65,9 +65,9 @@ body::before {
     	repeating-radial-gradient(
       		circle at 0 0,
       		rgba(255,255,255,0.06),
-      		rgba(255,255,255,0.03) 3px,
-      		transparent 3px,
-      		transparent 5px
+      		rgba(255,255,255,0.03) 4px,
+      		transparent 4px,
+      		transparent 6px
     	);
 
   	opacity: 0.2;
@@ -119,13 +119,19 @@ body::after {
 main {
 	width: 100%;
 	margin: 0;
-	padding: 2em 0 0 0;
 	box-sizing: border-box;
 }
 
 main, header, footer {
 	position: relative;
 	z-index: 2;
+}
+
+main, .header-row {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1em;
+  box-sizing: border-box;
 }
 
 h1,
@@ -145,11 +151,11 @@ h1 {
 	color: #ff4507;
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 35px;
 	color: #fd6532;
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 28px;
 }
 h4 {
 	font-size: 1.563em;
@@ -213,9 +219,10 @@ hr {
 	body {
 		font-size: 18px;
 	}
-	main {
-		padding: 1em;
-	}
+}
+
+ul li {
+	font-size: 16px;
 }
 
 .sr-only {
@@ -247,7 +254,7 @@ hr {
 .title-header h1 {
   font-family: Courier New, monospace;
   font-weight: 700;
-  font-size: 46px;
+  font-size: 42px;
   color: #ff4507;
   margin: 0;
 }
@@ -267,7 +274,62 @@ hr {
 	.header-row {
 		grid-template-columns: 1fr;
 	}
-	.title-header h1 {
-		font-size: 32px;
-	}
+}
+
+.blog-list {
+	padding-top: 1rem;
+}
+
+.intro {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	overflow: visible;
+	margin-bottom: 2rem;
+	width: 100%;
+	position: relative;
+}
+
+.intro img {
+	width: 260px;
+	height: 350px;
+	object-fit: cover;
+	display: block;
+}
+
+.intro-text {
+	flex: 1;
+}
+
+.recent-posts {
+  	margin-top: 2rem;
+}
+
+.posts-wrapper {
+  	position: relative;
+}
+
+.post-slot.faded {
+  	-webkit-mask-image: linear-gradient(
+    	to bottom,
+    	black 0%,
+    	black 30%,
+    	transparent 90%
+  	);
+  	mask-image: linear-gradient(
+    	to bottom,
+    	black 0%,
+    	black 30%,
+    	transparent 90%
+  	);
+}
+
+.flare-zone {
+  position: relative;
+}
+
+.flare {
+	position: absolute;
+  	pointer-events: none;
+  	user-select: none;
 }

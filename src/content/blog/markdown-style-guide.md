@@ -1,6 +1,6 @@
 ---
-title: 'Markdown Style Guide'
-description: 'froppiis first blog wao'
+title: '[placeholder1]'
+description: 'froppiis first blog wao(just a placeholder ill make actual ones sometime though)'
 pubDate: 'Jun 19 2024'
 heroImage: '../../assets/gridpaper.png'
 ---
