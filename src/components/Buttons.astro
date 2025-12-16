@@ -1,26 +1,77 @@
-<h2>friends!</h2>
+<h2>buttons!</h2>
+<section class="buttons">
+    <button
+        class="copy-button"
+        data-src="/button.gif"
+        data-title="froppii"
+        title="click to copy button link!"
+    >
+        <img src="/button.gif" alt="froppii">
+        <span class="copied-popup">Copied!</span>
+    </button>
+    <p>my button! click it to copy</p>
+</section>
+<h3>friends</h3>
 <section class="buttons">
     <a href="https://aconlin.com">
-        <img src="/buttons/acon-gets-a-button-animated.gif" alt="acon">
+        <img src="/buttons/acon-gets-a-button-animated.gif" title="acon">
     </a>
     <a href="https://gideon.sh">
-        <img src="/buttons/neocat.gif" alt="gideon">
+        <img src="/buttons/neocat.gif" title="gideon">
     </a>
     <a href="https://parkalex.dev">
-        <img src="/buttons/alexp.png" alt="alex">
+        <img src="/buttons/alexp.png" title="alex">
     </a>
     <a href="https://saahild.com">
-        <img src="/buttons/neon.gif" alt="neon">
+        <img src="/buttons/neon.gif" title="neon" />
     </a>
     <a href="https://cutiesin.tech">
-        <img src="https://cutiesin.tech/88x31/junya.gif" alt="junya">
+        <img src="https://cutiesin.tech/88x31/junya.gif" title="junya" />
     </a>
     <a href="https://phthallo.com">
-        <img src="/buttons/phthallo.png" alt="phthallo">
+        <img src="/buttons/phthallo.png" title="phthallo" />
+    </a>
+    <a href="https://bomberfish.ca">
+        <img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />
     </a>
 </section>
 
+<script>
+    document.addEventListener("click", async (e) => {
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        const btn = target.closest(".copy-button") as HTMLElement | null;
+        if (!btn) return;
+
+        const src = btn.dataset.src;
+        if (!src) return;
+
+        const url = new URL(src, window.location.origin).href;
+
+        try {
+            await navigator.clipboard.writeText(url);
+            btn.classList.add("copied");
+            setTimeout(() => btn.classList.remove("copied"), 1200);
+        } catch {
+            alert("Could not copy link");
+        }
+    });
+</script>
+
+
 <style>
+    .copy-button {
+        background: transparent;
+        padding: 0;
+        height: 100%
+    }
+
+    .copy-button.copied {
+        outline: 2px solid #ff4507;
+        outline-offset: 2px;
+    }
+
     .buttons {
         display: flex;
         flex-wrap: wrap;
