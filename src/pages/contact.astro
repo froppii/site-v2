@@ -28,18 +28,18 @@ const currentStop = stops.find(s => s.path === currentPath) ?? stops[0];
 
 		<StopIndicator
 			slot="center"
-  			stops={["/", "/about", "/projects", "/blog", "/contact"]}
-			links={["/", "/about", "/projects", "/blog", "/contact"]}
+  			stops={["/contact", "/home", "/about", "/projects", "/blog"]}
+			links={["/contact", "/", "/about", "/projects", "/blog"]}
 			current={Astro.url.pathname}
 		/>
-
-		<div slot="right">
-			<span>v1.0</span>
-		</div>
 	</HeaderRow>
 	<div class="title-header"><h1>contact</h1></div>
 	<p>
-		
+		email: <a href="mailto:darlenewu1310@gmail.com">darlenewu1310@gmail.com</a> 
+		<br />
+		signal: <a href="https://signal.me/#u/froppii.05">froppii.05</a>
+		<br />
+		discord: <a href="https://discord.com/users/745100230919192636">froppiiii</a>
 	</p>
 </Layout>
 

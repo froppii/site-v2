@@ -32,9 +32,9 @@ const currentStop = stops.find(s => currentPath === s.path || currentPath.starts
 
     <StopIndicator
       slot="center"
-      stops={stops.map(s => s.path)}
-      links={stops.map(s => s.path)}
-      current={currentPath}
+  		stops={["/blog", "/contact", "/home", "/about", "/projects"]}
+			links={["/blog", "/contact", "/", "/about", "/projects"]}
+			current={Astro.url.pathname}
     />
 
     <div slot="right">

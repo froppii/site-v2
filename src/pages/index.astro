@@ -34,7 +34,7 @@ const posts = (await getCollection('blog'))
 
 		<StopIndicator
 			slot="center"
-  			stops={["/", "/about", "/projects", "/blog", "/contact"]}
+  			stops={["/home", "/about", "/projects", "/blog", "/contact"]}
 			links={["/", "/about", "/projects", "/blog", "/contact"]}
 			current={Astro.url.pathname}
 		/>
